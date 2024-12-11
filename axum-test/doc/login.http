@@ -1,0 +1,12 @@
+### GET request to example server
+GET http://127.0.0.1:3000/
+
+###
+
+POST http://127.0.0.1:3000/json_test
+Content-Type: application/json
+
+{
+  "email": "test@admin.com",
+  "password": "123456"
+}

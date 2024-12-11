@@ -1,0 +1,3 @@
+[workspace]
+members = ["axum-test", "rboot"]
+resolver = "2"
