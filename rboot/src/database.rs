@@ -1,9 +1,9 @@
-use config::Config;
+use tl_config::TLConfig;
 use sqlx::postgres::PgPoolOptions;
 use sqlx::{Pool, Postgres};
 use std::time::Duration;
 
-pub async fn init_db_pool(config: &Config) -> Pool<Postgres> {
+pub async fn init_db_pool(config: &TLConfig) -> Pool<Postgres> {
     let db_host = config
         .get_string("database.host")
         .expect("database.host is required");

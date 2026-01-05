@@ -2,13 +2,13 @@ use axum::extract::State;
 use axum::http::StatusCode;
 use axum::routing::{get, post};
 use axum::{Json, Router};
-use rboot::config::load_config;
 use rboot::database::init_db_pool;
+use rboot::config;
 use sqlx::{PgPool};
 
 #[tokio::main]
 async fn main() {
-    let config = load_config();
+    let config = config::load_config();
     let pool = init_db_pool(&config).await;
     let server_port = config
         .get_int("server.port")

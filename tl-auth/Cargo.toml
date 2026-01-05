@@ -1,0 +1,15 @@
+[package]
+name = "tl-auth"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = { features=["macros"], version = "0.8.8" }
+chrono = "0.4.42"
+jsonwebtoken = { version = "10.2.0", features = ["rust_crypto"] }
+rboot={path = "../rboot"}
+sea-orm = {version = "2.0.0-rc.21", features = ["sqlx-postgres", "runtime-tokio-rustls", "macros"]}
+tokio = { features=["full"], version = "1.49.0" }
+serde = { version = "1.0.228", features = ["derive"] }
+
+
