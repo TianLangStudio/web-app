@@ -7,7 +7,8 @@ struct AppState {}
 #[tokio::main]
 async fn main() {
     rboot::log::init_log();
-    let config = rboot::config::load_config();
+    let config = rboot::config::load_config()
+        .unwrap_or_else(|err|panic!("load config failed: {:?}", err));
     let server_host = config
         .get_string("server.host")
         .unwrap_or("0.0.0.0".to_string());

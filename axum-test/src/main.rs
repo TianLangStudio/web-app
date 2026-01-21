@@ -8,7 +8,8 @@ use sqlx::{PgPool};
 
 #[tokio::main]
 async fn main() {
-    let config = config::load_config();
+    let config = config::load_config()
+        .unwrap_or_else(|err|panic!("load config error:{}", err));
     let pool = init_db_pool(&config).await;
     let server_port = config
         .get_int("server.port")
