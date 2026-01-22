@@ -8,10 +8,10 @@ use p256::{
 };
 use pem_rfc7468::LineEnding;
 
-use rboot::log::warn;
+use rboot::log::{info, warn};
 
 #[derive(Debug, Clone, serde::Serialize)]
-pub(crate) struct Es256KeyPair {
+pub struct Es256KeyPair {
     #[serde(skip_serializing)]
     private: String,
     public: String,
@@ -36,7 +36,8 @@ impl Es256KeyPair {
         self.public.as_str()
     }
 }
-pub(crate) struct Es256KeyPairService {
+#[derive(Debug)]
+pub struct Es256KeyPairService {
     key_pair: Es256KeyPair,
     last_key_pair: Option<Es256KeyPair>,
     key_lifetime: Duration,
@@ -72,23 +73,29 @@ impl Es256KeyPairService {
         };
         Ok((decoding_key, last_decoding_key))
     }
-    pub fn get_key_pair(&mut self) -> &Es256KeyPair {
-        if Utc::now().timestamp_millis()
-            > self.key_lifetime.num_milliseconds() + self.key_pair.timestamp
+    pub fn get_key_pair(&self) -> &Es256KeyPair {
+        &self.key_pair
+    }
+    pub fn refresh_key_pair(&mut self) -> anyhow::Result<()> {
+        let key_pair_lifetime = self.key_lifetime.num_milliseconds();
+        if key_pair_lifetime > 0
+            && Utc::now().timestamp_millis() > key_pair_lifetime + self.key_pair.timestamp
         {
             self.last_key_pair.replace(self.key_pair.clone());
             match Es256KeyPair::new() {
                 Ok(key_pair) => {
                     self.key_pair = key_pair;
+                    info!("refresh key pair successfully");
                 }
                 Err(e) => {
                     warn!("error generate new key pair: {}", e);
+                    return Err(anyhow::anyhow!("error generate new key pair"));
                 }
             }
         }
-        &self.key_pair
+        Ok(())
     }
-/*
+    /*
     pub fn get_key_pair_with_timestamp(&self, timestamp: i64) -> Option<&Es256KeyPair> {
         if self.key_pair.timestamp == timestamp {
             return Some(&self.key_pair);

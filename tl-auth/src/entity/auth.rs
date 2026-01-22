@@ -1,22 +1,18 @@
 use crate::entity::user::User;
-use crate::service::Es256KeyPairService;
+use axum::Json;
 use axum::extract::FromRef;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
-use axum::Json;
-use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
+use jsonwebtoken::{Algorithm, EncodingKey, Header, encode};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::sync::{Arc, RwLock};
 
 #[derive(Clone, FromRef)]
 pub(crate) struct AuthState {
-   // pub encoding_key: Arc<EncodingKey>,
-    pub key_service: Arc<RwLock<Es256KeyPairService>>,
-   // pub decoder: Decoder<TokenBody>,
+    // pub encoding_key: Arc<EncodingKey>,
+    //pub key_service: Arc<RwLock<Es256KeyPairService>>,
+    // pub decoder: Decoder<TokenBody>,
 }
-
-
 
 // login with email and password
 pub struct EmailPwdCredentials {

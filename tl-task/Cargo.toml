@@ -1,0 +1,12 @@
+[package]
+name = "tl-task"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio-cron-scheduler = {workspace = true}
+tokio = { workspace = true }
+uuid = { workspace = true }
+chrono-tz = {workspace = true}
+anyhow = {workspace = true}
+log = "0.4.29"

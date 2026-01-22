@@ -1,19 +1,15 @@
-use crate::entity::auth::{AuthError, AuthState, TokenBody};
-use crate::service::KeyPairService;
-use axum::extract::FromRef;
-use axum::{
-    extract::FromRequestParts, http::{request::Parts},
-    RequestPartsExt,
-};
+use crate::entity::auth::{AuthError, TokenBody};
+use crate::get_key_pair_service;
+use axum::{RequestPartsExt, extract::FromRequestParts, http::request::Parts};
 use axum_extra::{
-    headers::{authorization::Bearer, Authorization},
     TypedHeader,
+    headers::{Authorization, authorization::Bearer},
 };
-use jsonwebtoken::errors::{ErrorKind};
-use jsonwebtoken::{decode, Algorithm, Validation};
+use jsonwebtoken::errors::ErrorKind;
+use jsonwebtoken::{Algorithm, Validation, decode};
 use rboot::log::info;
 use serde::{Deserialize, Serialize};
-use std::sync::{Arc, RwLock};
+
 #[derive(Deserialize, Serialize, Clone, Default, Debug)]
 pub struct User {
     pub id: u32,
@@ -24,23 +20,24 @@ pub struct User {
     pub roles: Vec<String>,
 }
 
-impl FromRequestParts<AuthState> for User {
+impl<S> FromRequestParts<S> for User
+where
+    S: Send + Sync + Clone + 'static,
+{
     type Rejection = AuthError;
-    async fn from_request_parts(
-        parts: &mut Parts,
-        state: &AuthState,
-    ) -> Result<Self, Self::Rejection> {
+    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
         // Extract the token from the authorization header
-        let key_service = Arc::<RwLock<KeyPairService>>::from_ref(state);
         let TypedHeader(Authorization(bearer)) = parts
             .extract::<TypedHeader<Authorization<Bearer>>>()
             .await
             .map_err(|_| AuthError::InvalidToken)?;
+
+        let key_service = get_key_pair_service().ok_or(AuthError::InvalidDecodingKey)?;
+        let key_service = key_service
+            .read()
+            .map_err(|_| AuthError::InvalidDecodingKey)?;
         let (decoding_key, last_decoding_key) = {
-            let lock = key_service
-                .read()
-                .map_err(|_| AuthError::InvalidDecodingKey)?;
-            lock
+            key_service
                 .get_decoding_keys()
                 .map_err(|_| AuthError::InvalidDecodingKey)?
         };
