@@ -148,17 +148,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "axum-test"
-version = "0.1.0"
-dependencies = [
- "axum",
- "rboot",
- "serde",
- "sqlx",
- "tokio",
-]
-
-[[package]]
 name = "base16ct"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

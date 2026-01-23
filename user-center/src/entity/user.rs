@@ -11,6 +11,8 @@ pub struct User {
     pub roles: Vec<String>,
 }
 
+#[derive(Deserialize, Serialize, Clone, Default, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct EmailPwdCredentials {
     pub email: String,
     pub password: String,
