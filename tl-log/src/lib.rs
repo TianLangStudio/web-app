@@ -1,7 +1,5 @@
 pub use tracing::{debug, error, info, trace, warn, span, Level};
-
-
-pub fn init_log() {
+pub fn init() {
     tracing_subscriber::fmt().init();
     let version: &str = env!("CARGO_PKG_VERSION");
     info!(r#"
@@ -17,6 +15,4 @@ pub fn init_log() {
     info!("info level log");
     warn!("warn level log");
     error!("error level log");
-
-
 }

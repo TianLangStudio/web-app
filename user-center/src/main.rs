@@ -1,16 +1,19 @@
 use axum::routing::{get, post};
 use axum::{Json, Router};
+use rboot::jwt::Claims;
 use rboot::log::info;
-use tl_auth::entity::user::User;
-use tl_auth::init;
+use user_center::api::auth;
+use user_center::entity::user::User;
+
 
 #[derive(Clone)]
 struct AppState {}
 #[tokio::main]
 async fn main() {
-    rboot::log::init_log();
+    rboot::log::init();
     let config =
         rboot::config::load_config().unwrap_or_else(|err| panic!("load config failed: {:?}", err));
+    rboot::jwt::init(&config).await.unwrap_or_else(|err| panic!("init TlAuth failed: {:?}", err));
     let server_host = config
         .get_string("server.host")
         .unwrap_or("0.0.0.0".to_string());
@@ -19,10 +22,11 @@ async fn main() {
 
     let router = Router::new()
         .route("/", get(index))
-        .route("/api/outer/whoami", post(whoami))
+        .route("/api/auth/login", post(auth::login))
+        .route("/api/auth/whoami", post(whoami))
         .with_state(AppState {});
 
-    let router = init(&config, router).await;
+
     let listener = tokio::net::TcpListener::bind(format!("{server_host}:{server_port}"))
         .await
         .expect("bind port failed");
@@ -35,6 +39,6 @@ async fn main() {
 async fn index() -> &'static str {
     "developed by tianlang.tech"
 }
-async fn whoami(user: User) -> Json<User> {
-    user.into()
+async fn whoami(claims: Claims<User>) -> Json<User> {
+    claims.user.into()
 }

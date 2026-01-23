@@ -23,7 +23,7 @@ async fn start() -> anyhow::Result<()> {
 pub async fn init() -> anyhow::Result<()> {
     if JOB_SCHEDULE.get().is_none() {
         start().await?;
-        info!("job schedule initiated");
+        info!("TlTask is initiated successfully");
     }
     Ok(())
 }

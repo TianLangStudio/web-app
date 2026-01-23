@@ -7,8 +7,7 @@ use p256::{
     ecdsa::{SigningKey, VerifyingKey},
 };
 use pem_rfc7468::LineEnding;
-
-use rboot::log::{info, warn};
+use tl_log::{info, warn};
 
 #[derive(Debug, Clone, serde::Serialize)]
 pub struct Es256KeyPair {
@@ -119,7 +118,7 @@ fn generate_es256_key() -> anyhow::Result<(String, String)> {
     // PEM PKCS#8 private key (very common for JWT libraries)
     let pem_private = signing_key.to_pkcs8_pem(LineEnding::LF)?.to_string();
 
-    // PEM SubjectPublicKeyInfo (SPKI) public key
+    // PEM SubjectPublicKeyInfo public key
     let pem_pub = verifying_key
         .to_public_key_der()?
         .to_pem("PUBLIC KEY", LineEnding::LF)?;
@@ -130,7 +129,7 @@ fn generate_es256_key() -> anyhow::Result<(String, String)> {
 #[cfg(test)]
 mod tests {
     use crate::service::generate_es256_key;
-    use rboot::log::info;
+    use tl_log::info;
 
     #[test]
     fn test_generate_es256_key() {

@@ -1,5 +1,5 @@
 [workspace]
-members = ["axum-test", "rboot", "tl-auth", "tl-config", "tl-task"]
+members = ["axum-test", "rboot", "tl-jwt", "tl-config", "tl-log", "tl-task", "user-center"]
 resolver = "2"
 
 [workspace.dependencies]

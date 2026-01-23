@@ -1,15 +1,15 @@
 [package]
-name = "tl-auth"
+name = "tl-jwt"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+tl-config = {path = "../tl-config"}
+tl-log = {path = "../tl-log"}
+tl-task = {path = "../tl-task"}
 axum = {workspace = true}
 chrono = {workspace = true}
 jsonwebtoken = {workspace = true}
-rboot={path = "../rboot"}
-sea-orm = {version = "2.0.0-rc.21", features = ["sqlx-postgres", "runtime-tokio-rustls", "macros"]}
-tokio = { workspace = true }
 serde = { workspace = true }
 p256     = { version = "0.13", features = ["ecdsa", "pkcs8", "pem"] }
 pem-rfc7468 = "1.0.0"

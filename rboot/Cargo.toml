@@ -7,5 +7,5 @@ edition = "2021"
 sqlx = { workspace = true }
 tl-config={path = "../tl-config"}
 tl-task = {path = "../tl-task"}
-tracing = {workspace = true}
-tracing-subscriber = {workspace = true}
+tl-log = {path = "../tl-log"}
+tl-jwt = {path = "../tl-jwt"}
