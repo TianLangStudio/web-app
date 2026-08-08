@@ -1,11 +1,18 @@
 [package]
 name = "rboot"
 version = "0.1.0"
-edition = "2021"
-
+edition = "2024"
+[features]
+default = ["log", "config"]
+log = ["dep:tl-log"]
+config = ["dep:tl-config"]
+task = ["dep:tl-task"]
+db = ["dep:sqlx"]
+jwt = ["dep:tl-jwt"]
 [dependencies]
-sqlx = { workspace = true }
-tl-config={path = "../tl-config"}
-tl-task = {path = "../tl-task"}
-tl-log = {path = "../tl-log"}
-tl-jwt = {path = "../tl-jwt"}
+sqlx = { workspace = true , optional = true}
+tl-config={path = "../tl-config", optional = true}
+tl-task = {path = "../tl-task", optional = true}
+tl-log = {path = "../tl-log", optional = true}
+tl-jwt = {path = "../tl-jwt", optional = true}
+anyhow = "1.0.104"

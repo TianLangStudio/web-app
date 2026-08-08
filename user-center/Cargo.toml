@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 axum = {workspace = true}
-rboot={path = "../rboot"}
+rboot={path = "../rboot", features = ["jwt", "db"]}
 tokio = { workspace = true }
 sea-orm = {workspace = true}
 serde = { workspace = true }
